@@ -1,0 +1,55 @@
+<!DOCTYPE html5>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>copus</title>
+    <link rel="icon" type="image/png" href="noti.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="">
+</head>
+
+<script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileElem = document.getElementById('fileElem');
+    uploadArea.addEventListener('click', () => {
+        fileElem.click();
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
+
+    fileElem.addEventListener('change', (e) => {
+        console.log('Files selected:', e.target.files)
+    });
+</script>
+
+<body class="body">
+    <div class="container">
+        <h1>copus file converter</h1>
+        <h3>convert mp3 files to opus/ogg</h3>
+
+        <div class="upload-area" id="upload-area">
+            <div class="upload-icon">
+                <img src="upload.svg" alt="Upload Icon">
+            </div>
+            <h2>click to upload or drag a file into me</h2>
+            <input type="file" id="fileElem" multiple accept=".mp3" style="display: none">
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+1. Make it so the main text shrinks when the window shrinks too, instead of wrapping.
