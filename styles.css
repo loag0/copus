@@ -18,14 +18,26 @@
     width: 67%;
     padding: 15px;
 }
-.container h1{
-    font-size: 55px;
+.main-text{
+    position: relative;
+    font-weight: normal;
+    font-size: clamp(2.5rem, 5vw, 3rem);
+}
+.main-text::after{
+    content: "";
+    position: absolute;
+    bottom: -17%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 41%;
+    height: 1.5px;
+    background-color: #0077ed;
 }
 .container h3{
     color: #0077ed;
-    font-size: 21px;
-    font-weight: 500;
-    margin-top: -15px;
+    font-size: clamp(1.5rem, 1vw, 2.5rem);
+    font-weight: 400;
+    margin-top: -5px;
 }
 .upload-area{
     border-style: dashed;
@@ -55,16 +67,16 @@
 .upload-area h2{
     font-size: 24px;
     color: #000;
-
     z-index: 1;
 }
  .upload-icon {
     position: absolute; /* Positioned relative to .upload-area */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centers it perfectly */
+    transform: translate(-50%, 20%); /* Centers it perfectly */
     width: 67px;
     height: 67px;
+    font-weight: 700;
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none; /* So clicks pass through to the div below */

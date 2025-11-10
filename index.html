@@ -9,37 +9,9 @@
     <link rel="icon" href="">
 </head>
 
-<script>
-    const uploadArea = document.getElementById('upload-area');
-    const fileElem = document.getElementById('fileElem');
-    uploadArea.addEventListener('click', () => {
-        fileElem.click();
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        handleFiles(files);
-    });
-
-    fileElem.addEventListener('change', (e) => {
-        console.log('Files selected:', e.target.files)
-    });
-</script>
-
 <body class="body">
     <div class="container">
-        <h1>copus file converter</h1>
+        <h1 class="main-text">copus file converter</h1>
         <h3>convert mp3 files to opus/ogg</h3>
 
         <div class="upload-area" id="upload-area">
@@ -49,7 +21,54 @@
             <h2>click to upload or drag a file into me</h2>
             <input type="file" id="fileElem" multiple accept=".mp3" style="display: none">
         </div>
-
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+        const uploadArea = document.getElementById('upload-area');
+        const fileElem = document.getElementById('fileElem');
+        
+        uploadArea.addEventListener('click', () => {
+        fileElem.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.stopPropagation();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('dragover');
+        });
+
+        fileElem.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const mp3Files = Array.from(files).filter(file => file.type === 'audio/mpeg' || file.name.toLowerCase().endsWith('.mp3'));
+
+            if(mp3Files.length > 0){
+                displayFiles(mp3Files);
+            } else {
+                alert('please upload valid MP3 files.');
+            }
+        }
+        function displayFiles(files) {
+            files.forEach(file => {
+                console.log(`File: ${file.name}, Size: ${file.size} bytes`);
+            });
+        }
+    });
+    </script>
 </body>
 </html>
