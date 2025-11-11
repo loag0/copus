@@ -60,7 +60,7 @@
     cursor: pointer;    
 }
 .upload-area:hover h2{
-    opacity: 0.41;
+    opacity: 0.30;
     transition: 0.3s ease-in-out
 }
 
@@ -73,9 +73,9 @@
     position: absolute; /* Positioned relative to .upload-area */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 20%); /* Centers it perfectly */
-    width: 67px;
-    height: 67px;
+    transform: translate(-50%, -50%); /* Centers it perfectly */
+    width: 150px;
+    height: 150px;
     font-weight: 700;
     opacity: 0;
     transition: opacity 0.3s ease;
