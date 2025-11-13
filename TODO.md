@@ -1,1 +1,3 @@
-1. Make it so the main text shrinks when the window shrinks too, instead of wrapping.
+1. add a loading screen when file is being uploaded.
+2. add one for when the file is being converted
+3. drag func still isnt working
