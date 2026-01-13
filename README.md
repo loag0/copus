@@ -72,6 +72,7 @@ http://localhost:3000
 ```
 copus/
 │
+├─ index.html
 ├─ index.js           # backend server
 ├─ package.json
 ├─ styles.css         # frontend styles
@@ -114,6 +115,11 @@ copus/
 # ⬆️ Deployment
 
 You can host it on Render, Vercel, or any Node.js compatible server.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](
+https://render.com/deploy?repo=https://github.com/loag0/copus
+)
+
 
 Make sure the server is accessible via HTTPS for secure file uploads/downloads.
 
