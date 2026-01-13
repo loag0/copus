@@ -4,6 +4,7 @@ const cors = require("cors");
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
 const path = require("path");
+ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || "ffmpeg");
 
 const app = express();
 
@@ -96,6 +97,6 @@ app.post("/convert", upload.single("file"), async (req, res) => {
 });
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server running at http://localhost:3000");
 });
