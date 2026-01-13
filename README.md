@@ -66,7 +66,7 @@ node index.js
 http://localhost:3000
 
 
-## ⚠️ Make sure you have ffmpeg installed; Copus uses it for file conversion.
+### ⚠️ Make sure you have ffmpeg installed; Copus uses it for file conversion.
 
 # 📁 Folder Structure
 ```
