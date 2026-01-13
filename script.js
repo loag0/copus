@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentFile = null;
 
-  // drag & drop
+  // for drag and drop functionality
+
   document.addEventListener("dragover", (e) => e.preventDefault());
   document.addEventListener("drop", (e) => e.preventDefault());
 
@@ -39,9 +40,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!mp3Files.length) return alert("please upload valid MP3 files.");
 
     currentFile = mp3Files[0];
-    uploadArea.style.display = "none";
-    conversionArea.style.display = "flex";
-    displayFileInConversion(currentFile);
+
+    // Fade out upload area
+    uploadArea.classList.add("fade-out");
+
+    setTimeout(() => {
+      uploadArea.style.display = "none";
+      uploadArea.classList.remove("fade-out");
+      conversionArea.style.display = "flex";
+
+      // Fade in conversion area
+      setTimeout(() => {
+        conversionArea.classList.add("show");
+      }, 50);
+
+      displayFileInConversion(currentFile);
+    }, 400);
   }
 
   function displayFileInConversion(file) {
@@ -50,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
       (file.size / 1024 / 1024).toFixed(2) + " MB";
   }
 
+  const spinner = document.getElementById("spinner");
+
   async function convertFile() {
     if (!currentFile) return alert("No file selected!");
 
@@ -57,6 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData();
     formData.append("file", currentFile);
     formData.append("format", format);
+
+    convertButton.disabled = true;
+    convertButton.textContent = "converting...";
+    spinner.style.display = "flex";
 
     try {
       const response = await fetch("http://localhost:3000/convert", {
@@ -68,23 +88,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const blob = await response.blob();
 
-      conversionArea.style.display = "none";
-      downloadArea.style.display = "flex";
+      // Fade out conversion area
+      conversionArea.classList.remove("show");
 
-      displayFileInDownload(currentFile, format, blob);
+      setTimeout(() => {
+        conversionArea.style.display = "none";
+        downloadArea.style.display = "flex";
+
+        // Fade in download area
+        setTimeout(() => {
+          downloadArea.classList.add("show");
+        }, 50);
+
+        displayFileInDownload(currentFile, format, blob);
+      }, 400);
     } catch (err) {
       console.error(err);
       alert("conversion failed");
+      convertButton.disabled = false;
+      convertButton.textContent = "convert";
+      spinner.style.display = "none";
     }
   }
 
   function displayFileInDownload(file, format, blob) {
     const newFileName = file.name.replace(".mp3", `.${format}`);
     downloadArea.querySelector(".file-name").textContent = newFileName;
-    downloadArea.querySelector(".file-size").textContent =
-      (blob.size / 1024 / 1024).toFixed(2) + " MB";
 
-    downloadButton.onclick = () => {
+    const fileSizeElement = downloadArea.querySelector(".file-size h3");
+    if (fileSizeElement) {
+      fileSizeElement.textContent =
+        (blob.size / 1024 / 1024).toFixed(2) + " MB";
+    }
+
+    downloadButton.onclick = (e) => {
+      e.preventDefault();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
