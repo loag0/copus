@@ -69,6 +69,7 @@ http://localhost:3000
 ## ⚠️ Make sure you have ffmpeg installed; Copus uses it for file conversion.
 
 # 📁 Folder Structure
+```
 copus/
 │
 ├─ index.js           # backend server
@@ -79,7 +80,7 @@ copus/
 │   ├─ upload.svg
 │   └─ favicon.ico
 └─ uploads/           # temporary uploaded files (auto-deleted after conversion)
-
+```
 # Usage
 
 - Open the app in your browser.
