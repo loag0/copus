@@ -2,9 +2,10 @@ const express = require("express");
 const fs = require("fs");
 const cors = require("cors");
 const multer = require("multer");
-const ffmpeg = require("fluent-ffmpeg");
 const path = require("path");
-ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || "ffmpeg");
+const ffmpeg = require("fluent-ffmpeg");
+const ffmpegPath = require("ffmpeg-static");
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
 
