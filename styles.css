@@ -117,7 +117,7 @@
     height: auto;
     width: 100%;
     align-content: center;
-    box-shadow: 1px 1px 2px #2a2a2a;
+    box-shadow: 0 1.5px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     padding: 5px 15px 5px 15px;
 }
@@ -150,14 +150,18 @@
 }
 .convert-button{
     font-size: clamp(0.67rem, 0.75vw + 0.67rem, 1.2rem);
-    font-weight: 500;
     cursor: pointer;
     color: #0077ed;
-    text-decoration: underline;
+    font-weight: 600;
+    margin-top: 30px;
+    border-style: none;
+    background-color: #fff;
 }
 .download-area{
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
     padding-bottom: -30px;
     position: relative;
@@ -171,7 +175,7 @@
     border-width: 0.2px;
     box-shadow: 1px 1px 5px #0080ff72;
     height: auto;
-    width: clamp(70vw, 40vw, 75vw);
+    width: clamp(50vw, 30vw, 50vw);
 }
 .download-info{
     display: flex;
@@ -181,6 +185,16 @@
     height: auto;
     width: 100%;
     align-content: center;
+    box-shadow: 0 1.5px 1px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    padding: 5px 15px 5px 15px;
+    padding: 15px 15px 15px 15px;
+}
+.download-button{
+    font-size: clamp(0.67rem, 0.75vw + 0.67rem, 1.2rem);
+    cursor: pointer;
+    color: #0077ed;
+    font-weight: 600;
+    margin-top: 30px;
+    border-style: none;
+    background-color: #fff;
 }
