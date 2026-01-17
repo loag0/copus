@@ -124,7 +124,7 @@ https://render.com/deploy?repo=https://github.com/loag0/copus
 Make sure the server is accessible via HTTPS for secure file uploads/downloads.
 
 # Recognition
-This project was inspired by @disara7, whose image format converter gave me the idea to make my own tool. I built copus to convert MP3s to Opus/OGG for my custom notification sounds, and now anyone can use it too!
+This project was inspired by @[disara7](https://github.com/disara7), whose image format converter gave me the idea to make my own tool. I built copus to convert MP3s to Opus/OGG for my custom notification sounds, and now anyone can use it too!
 
 # 🪪 License
 
