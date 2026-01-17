@@ -79,28 +79,32 @@ document.addEventListener("DOMContentLoaded", () => {
     spinner.style.display = "flex";
 
     try {
-      const response = await fetch("http://localhost:3000/convert", {
+      const response = await fetch("/convert", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Conversion failed");
+      if (!response.ok) throw new Error("conversion failed");
 
-      const blob = await response.blob();
+      const data = await response.json();
 
-      // Fade out conversion area
+      //const blob = await response.blob();
+      //json returned instead of blob because it was failing on mobile
+
+      if (!data.url) throw new Error("no download url");
+
+      // fade out conversion area
       conversionArea.classList.remove("show");
 
       setTimeout(() => {
         conversionArea.style.display = "none";
         downloadArea.style.display = "flex";
 
-        // Fade in download area
         setTimeout(() => {
           downloadArea.classList.add("show");
         }, 50);
 
-        displayFileInDownload(currentFile, format, blob);
+        displayFileInDownload(currentFile, format, data.url, data.size);
       }, 400);
     } catch (err) {
       console.error(err);
@@ -111,26 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function displayFileInDownload(file, format, blob) {
+  function displayFileInDownload(file, format, downloadUrl, size) {
     const newFileName = file.name.replace(".mp3", `.${format}`);
     downloadArea.querySelector(".file-name").textContent = newFileName;
 
-    const fileSizeElement = downloadArea.querySelector(".file-size h3");
-    if (fileSizeElement) {
-      fileSizeElement.textContent =
-        (blob.size / 1024 / 1024).toFixed(2) + " MB";
+    const fileSizeElement = downloadArea.querySelector("h3");
+    if (fileSizeElement && size) {
+      fileSizeElement.textContent = (size / 1024 / 1024).toFixed(2) + " MB";
     }
 
-    downloadButton.onclick = (e) => {
-      e.preventDefault();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = newFileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    downloadButton.onclick = () => {
+      window.location.href = downloadUrl;
     };
   }
 });

@@ -44,7 +44,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "audio/mpeg") cb(null, true);
-  else cb(new Error("Only MP3 files allowed!"), false);
+  else cb(new Error("only mp3 files allowed!"), false);
 };
 
 const upload = multer({
@@ -53,51 +53,68 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-app.post("/convert", upload.single("file"), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+app.post("/convert", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "no file uploaded" });
+  }
 
-  const inputFile = req.file.path;
-  const format = req.body.format.toLowerCase();
-  let codec, outputPath;
+  const inputPath = req.file.path;
+  const format = req.body.format?.toLowerCase();
 
+  let ext, codec;
   if (format === "opus") {
+    ext = "opus";
     codec = "libopus";
-    outputPath = inputFile + ".opus";
   } else if (format === "ogg") {
+    ext = "ogg";
     codec = "libvorbis";
-    outputPath = inputFile + ".ogg";
   } else {
-    fs.unlinkSync(inputFile);
-    return res.status(400).json({ error: "Invalid format" });
+    fs.unlinkSync(inputPath);
+    return res.status(400).json({ error: "invalid format" });
   }
 
-  try {
-    await new Promise((resolve, reject) => {
-      ffmpeg(inputFile)
-        .audioCodec(codec)
-        .toFormat(format)
-        .save(outputPath)
-        .on("end", resolve)
-        .on("error", reject);
+  const outputName = `${Date.now()}.${ext}`;
+  const outputPath = path.join("uploads", outputName);
+
+  ffmpeg(inputPath)
+    .audioCodec(codec)
+    .save(outputPath)
+    .on("end", () => {
+      fs.unlinkSync(inputPath);
+
+      const size = fs.statSync(outputPath).size;
+
+      res.json({
+        success: true,
+        filename: outputName,
+        url: `/download/${outputName}?name=${encodeURIComponent(
+          req.file.originalname.replace(".mp3", `.${ext}`),
+        )}`,
+        size
+      });
+    })
+    .on("error", (err) => {
+      console.error("ffmpeg error:", err);
+      fs.existsSync(inputPath) && fs.unlinkSync(inputPath);
+      res.status(500).json({ error: "conversion failed" });
     });
-
-    res.download(
-      outputPath,
-      req.file.originalname.replace(".mp3", `.${format}`),
-      (err) => {
-        fs.existsSync(inputFile) && fs.unlinkSync(inputFile);
-        fs.existsSync(outputPath) && fs.unlinkSync(outputPath);
-        if (err) console.error("Download error:", err);
-      }
-    );
-  } catch (err) {
-    fs.existsSync(inputFile) && fs.unlinkSync(inputFile);
-    console.error("Conversion error:", err);
-    res.status(500).json({ error: "Conversion failed" });
-  }
 });
 
+app.get("/download/:file", (req, res) => {
+  const filePath = path.join("uploads", req.params.file);
+  const originalname = req.query.name;
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server running at http://localhost:3000");
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send("file not found");
+  }
+
+  res.download(filePath, originalname || req.params.file, (err) => {
+    if (err) console.error("download error:", err);
+    fs.unlink(filePath, () => {});
+  });
+});
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
