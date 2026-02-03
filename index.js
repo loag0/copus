@@ -68,7 +68,11 @@ app.post("/convert", upload.single("file"), (req, res) => {
   } else if (format === "ogg") {
     ext = "ogg";
     codec = "libvorbis";
-  } else {
+  } else if (format === "wav") {
+    ext = "wav";
+    codec = "pcm_s16le";
+  }
+  else {
     fs.unlinkSync(inputPath);
     return res.status(400).json({ error: "invalid format" });
   }
