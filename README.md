@@ -1,8 +1,8 @@
-# 💾 Copus - MP3 to Opus/Ogg Converter
+# copus - mp3 to opus/ogg converter
 
-Copus is a lightweight web app that lets you convert MP3 files to Opus or Ogg formats directly in your browser. It's built with Node.js, Express, ffmpeg, and a simple frontend for drag-and-drop file conversion.
+copus is a lightweight web app that lets you convert MP3 files to Opus or Ogg formats directly in your browser. It's built with Node.js, Express, ffmpeg, and a simple frontend for drag-and-drop file conversion.
 
-# ⚙️ Features
+# Features
 
 - Drag-and-drop or click-to-upload MP3 files
 
@@ -16,7 +16,7 @@ Copus is a lightweight web app that lets you convert MP3 files to Opus or Ogg fo
 
 - CORS enabled for flexible use
 
-# 👨‍💻 Tech Stack
+# Tech Stack
 
 + Backend: Node.js, Express, Multer, ffmpeg
 
@@ -26,7 +26,7 @@ Copus is a lightweight web app that lets you convert MP3 files to Opus or Ogg fo
 
 + Deployment: Can run locally or on platforms like Render
 
-# ✨ Getting Started
+# Getting Started
 ## Prerequisites
 
 - Node.js
@@ -66,9 +66,9 @@ node index.js
 http://localhost:3000
 
 
-### ⚠️ Make sure you have ffmpeg installed; Copus uses it for file conversion.
+### Make sure you have ffmpeg installed; Copus uses it for file conversion.
 
-# 📁 Folder Structure
+# Folder Structure
 ```
 copus/
 │
@@ -112,7 +112,7 @@ copus/
 
 - Running ffmpeg in a sandbox/container
 
-# ⬆️ Deployment
+# Deployment
 
 You can host it on Render, Vercel, or any Node.js compatible server.
 
@@ -126,6 +126,6 @@ Make sure the server is accessible via HTTPS for secure file uploads/downloads.
 # Recognition
 This project was inspired by @[disara7](https://github.com/disara7), whose image format converter gave me the idea to make my own tool. I built copus to convert MP3s to Opus/OGG for my custom notification sounds, and now anyone can use it too!
 
-# 🪪 License
+# License
 
 MIT License — feel free to use, modify, or share.
