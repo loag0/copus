@@ -116,11 +116,6 @@ copus/
 
 You can host it on Render, Vercel, or any Node.js compatible server.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](
-https://render.com/deploy?repo=https://github.com/loag0/copus
-)
-
-
 Make sure the server is accessible via HTTPS for secure file uploads/downloads.
 
 # Recognition
@@ -128,4 +123,4 @@ This project was inspired by @[disara7](https://github.com/disara7), whose image
 
 # License
 
-MIT License — feel free to use, modify, or share.
+MIT License - see [LICENSE](LICENSE) for details
