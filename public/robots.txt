@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://copus-h8e4.onrender.com/sitemap.xml

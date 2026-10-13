@@ -1,76 +1,63 @@
-<!DOCTYPE html5>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>copus</title>
-    <link rel="icon" type="image/png" href="/assets/favicon.ico">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-</head>
+    <head>
+        <meta charset="UTF-8" />
 
-<body class="body">
-    <div class="container">
-        <h1 class="main-text">copus file converter</h1>
-        <h3 class="sub-text">convert mp3 files to opus/ogg</h3>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
 
-        <!--This is the div for the upload area before any file has been uploaded-->
-        <div class="upload-area" id="upload-area">
-            <div class="upload-icon">
-                <img src="./assets/upload.svg" alt="Upload Icon">
-            </div>
-            <h2>click to upload or drag a file into me</h2>
-            <input type="file" id="fileElem" multiple accept=".mp3" style="display: none">
+        <meta
+            name="description"
+            content="copus is a simple audio file converter for converting MP3 files to Opus, OGG, and WAV."
+        />
 
-            <p>Max upload size is 10MB</p>
-        </div>
+        <meta
+            name="robots"
+            content="index, follow"
+        />
 
-        <!-- After the upload, the div changes to the conversion state-->
+        <link
+            rel="canonical"
+            href="https://copus-h8e4.onrender.com/"
+        />
 
-        <div class="conversion-area">
-            <div class="conversion-info">
-                <div class="file-details">
-                    <h2 class="file-name" style="font-weight: 400; font-size: clamp(0.67rem, 0.41rem + 0.32rem, 2rem);">filename.mp3</h2>
-                </div>
-                <div>
-                    <h3 class="file-size" style="color: #0077ed; font-size: clamp(0.32rem, 2vw, 0.75rem); font-weight: 400;">0 MB</h3>
-                </div>
-                <div class="dropdown">
-                    <p>to: </p>
-                    <select name="formats" id="format-selector">
-                        <option value="opus">opus</option>
-                        <option value="ogg">ogg</option>
-                        <option value="wav">wav</option>
-                    </select>
-                </div>
-            </div>
-            <div>
-                <button class="convert-button" id="convert-button" type="button">
-                convert
-                </button>
-            </div>
-            <div class="spinner" id="spinner" style="display:none;">
-                <p>converting...</p>
-            </div>
-        </div>
+        <link
+            rel="icon"
+            href="/assets/favicon.ico"
+        />
 
-        <!-- After conversion, the download div is visible so the user can... download it i guess idk im not a programmer -->
+        <meta
+            property="og:title"
+            content="copus - audio file converter"
+        />
 
-        <div class="download-area" id="download-area">
-            <div class="download-info">
-                <div class="file-details">
-                    <h2 class="file-name" style="font-weight: 400; font-size: clamp(0.67rem, 0.41rem + 0.32rem, 2rem);">filename.mp3</h2>
-                </div>
-                <div class="file-size">
-                    <h3>0 MB</h3>
-                </div>
-            </div>
-            <div>
-                <button class="download-button">
-                download
-                </button>
-            </div>
-        </div>
-    </div>    
-</body>
+        <meta
+            property="og:description"
+            content="Convert MP3 files to Opus, OGG, and WAV."
+        />
+
+        <meta
+            property="og:type"
+            content="website"
+        />
+
+        <meta
+            property="og:url"
+            content="https://copus-h8e4.onrender.com/"
+        />
+
+        <meta 
+            name="google-site-verification" 
+            content="Bg3lBt9PYL5rJ4RcPWhdPcnRfbelSFhcxpCnZdKIa24" 
+        />
+
+        <title>copus - audio file converter</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.jsx"></script>
+    </body>
 </html>
