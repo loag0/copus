@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const MAX_SIZE = 10 * 1024 * 1024;
 
 const FORMATS = [{ value: "opus" }, { value: "ogg" }, { value: "wav" }];
+const AUDIO_EXTENSION = /\/(mp3|opus|ogg|wav)$/i;
 
 function formatFileSize(size) {
   if (size < 1024) return `${size} ${size === 1 ? "byte" : "bytes"}`;
@@ -10,7 +11,6 @@ function formatFileSize(size) {
   const kb = size / 1024;
 
   if (kb < 10) return `${kb.toFixed(1)} kB`;
-
   if (kb < 1024) return `${Math.round(kb)} kB`;
 
   return `${(size / (1024 * 1024)).toFixed(2)} MB`;
@@ -18,7 +18,7 @@ function formatFileSize(size) {
 
 function sanitizeFileName(name) {
   return name
-    .replace(/\.[^.]*$/, "")
+    .replace(AUDIO_EXTENSION, "")
     .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
     .replace(/[. ]+$/g, "")
     .trim()
@@ -37,7 +37,7 @@ async function readApiError(response) {
     : "yikes! looks like we couldn't process your request. please check your file and try again";
 }
 
-function Toast({ toast, onDismiss }) {
+function Toast({ toast, onDismiss, onPause, onResume }) {
   if (!toast) return null;
 
   return (
@@ -45,7 +45,10 @@ function Toast({ toast, onDismiss }) {
       key={toast.id}
       className={`toast toast-${toast.type}`}
       role={toast.type === "error" ? "alert" : "status"}
-      aria-live={toast.type === "error" ? "assertive" : "polite"}
+      onMouseEnter={onPause}
+      onMouseLeave={onResume}
+      onFocus={onPause}
+      onBlur={onResume}
     >
       <span className="toast-icon" aria-hidden="true">
         {toast.type === "error" ? (
@@ -113,18 +116,27 @@ function App() {
   const [outputName, setOutputName] = useState("");
   const [toast, setToast] = useState(null);
 
-  function showToast(message, type = "error", title) {
+  function startToastTimer(ms) {
     clearTimeout(toastTimeoutRef.current);
+    toastTimeoutRef.current = setTimeout(() => setToast(null), ms);
+  }
 
+  function showToast(message, type = "error", title) {
     setToast({
+      id: Date.now(),
       message,
       type,
       title: title || (type === "error" ? "error" : "success"),
     });
+    startToastTimer(Math.max(4000, message.length * 60));
+  }
 
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast(null);
-    }, 4000);
+  function pauseToast() {
+    clearTimeout(toastTimeoutRef.current);
+  }
+
+  function resumeToast() {
+    startToastTimer(2000);
   }
 
   function dismissToast() {
@@ -158,7 +170,7 @@ function App() {
 
     if (file.size > MAX_SIZE) {
       showToast(
-        `That file is ${formatFileSize(file.size)}. The limit is 10 MB bro.`,
+        `that file is ${formatFileSize(file.size)}. the limit is 10 MB bro.`,
         "error",
         "file too large"
       );
@@ -190,76 +202,74 @@ function App() {
 
   async function convertFile() {
     if (!currentFile) {
-      showToast("choose an MP3 file before converting.", "error");
+      showToast("choose an mp3 file before converting.", "error");
       return;
     }
 
-    let safeName = currentFile.name.replace(/\.mp3$/i, "");
+    const safeName = sanitizeFileName(outputName);
 
-    if (isRenameOpen) {
-      safeName = sanitizeFileName(outputName);
-
-      if (!safeName) {
-        showToast("nah dawg, thats not a valid name.", "error", "invalid filename");
-        return;
-      }
+    if (!safeName) {
+      showToast(
+        "nah dawg, thats not a valid name.",
+        "error",
+        "invalid filename",
+      );
+      return;
     }
 
     const formData = new FormData();
     formData.append("file", currentFile);
     formData.append("format", format);
-
-    if (isRenameOpen) {
-      formData.append("filename", safeName);
-    }
+    formData.append("filename", safeName);
 
     setIsConverting(true);
 
-    
-try {
-  const response = await fetch("/convert", {
-    method: "POST",
-    body: formData,
-  });
+    try {
+      const response = await fetch("/convert", {
+        method: "POST",
+        body: formData,
+      });
 
-  if (!response.ok) {
-    const message = await readApiError(response);
-    showToast(message);
-    setIsConverting(false);
-    return;
+      if (!response.ok) {
+        const message = await readApiError(response);
+        showToast(message);
+        setIsConverting(false);
+        return;
+      }
+
+      const data = await response.json().catch(() => null);
+
+      if (!data?.url || !data?.filename) {
+        showToast(
+          "conversion finished, but we couldn't prepare your download. please try again.",
+        );
+        setIsConverting(false);
+        return;
+      }
+
+      setConvertedFile({
+        name: data.filename,
+        size: data.size,
+        url: data.url,
+      });
+
+      setView("conversion-exiting");
+
+      setTimeout(() => {
+        setView("download");
+        setIsConverting(false);
+      }, 400);
+    } catch (err) {
+      console.error("conversion request failed:", err);
+
+      showToast(
+        "couldn't connect to copus. check your connection and try again.",
+        "connection failed",
+      );
+
+      setIsConverting(false);
+    }
   }
-
-  const data = await response.json().catch(() => null);
-  console.log("conversion response", data);
-
-  if (!data?.url || !data?.filename) {
-    showToast(
-      "conversion finished, but we couldn't prepare your download. please try again.",
-    );
-    setIsConverting(false);
-    return;
-  }
-
-  setConvertedFile({
-    name: data.filename,
-    size: data.size,
-    url: data.url,
-  });
-
-  setView("conversion-exiting");
-
-  setTimeout(() => {
-    setView("download");
-    setIsConverting(false);
-  }, 400);
-} catch (err) {
-  console.error("conversion request failed:", err);
-
-  showToast("couldn't connect to copus. check your connection and try again.", "connection failed");
-
-  setIsConverting(false);
-  }
-}
 
   function downloadFile() {
     if (!convertedFile?.url) {
@@ -270,7 +280,12 @@ try {
       return;
     }
 
-    window.location.href = convertedFile.url;
+    const link = document.createElement("a");
+    link.href = convertedFile.url;
+    link.download = convertedFile.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 
   function reset() {
@@ -283,9 +298,20 @@ try {
     setView("upload");
   }
 
+  const defaultName = currentFile
+    ? currentFile.name.replace(AUDIO_EXTENSION, "")
+    : "";
+  const savedName = sanitizeFileName(outputName);
+  const isRenamed = savedName !== sanitizeFileName(defaultName);
+
   return (
     <main className="body">
-      <Toast toast={toast} onDismiss={dismissToast} />
+      <Toast
+        toast={toast}
+        onDismiss={dismissToast}
+        onPause={pauseToast}
+        onResume={resumeToast}
+      />
 
       <div className="container">
         <h1 className="main-text">copus file converter</h1>
@@ -335,7 +361,7 @@ try {
               style={{ display: "none" }}
             />
 
-            <p>Max upload size is 10MB</p>
+            <p>max upload size is 10MB</p>
           </div>
         )}
 
@@ -398,6 +424,12 @@ try {
               >
                 <span>rename file (optional)</span>
 
+                {!isRenameOpen && isRenamed && savedName && (
+                  <span className="rename-value">
+                    {savedName}.{format}
+                  </span>
+                )}
+
                 <span
                   className={`rename-chevron ${isRenameOpen ? "open" : ""}`}
                   aria-hidden="true"
@@ -414,6 +446,10 @@ try {
                     type="text"
                     value={outputName}
                     onChange={(event) => setOutputName(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") convertFile();
+                    }}
+                    autoFocus
                     maxLength={180}
                     disabled={isConverting}
                     aria-label="Output filename without extension"

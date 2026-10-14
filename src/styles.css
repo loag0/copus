@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 * {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter Variable", sans-serif;
 }
 
 *,
@@ -82,6 +81,7 @@ body {
   opacity: 0.2;
 }
 .upload-area p {
+  font-size: clamp(0.67rem, 2vw, 2rem);
   color: red;
   z-index: 1;
   transition: opacity 0.3s ease-in-out;
@@ -367,22 +367,24 @@ select:focus-visible,
 }
 
 .rename-toggle {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  align-self: flex-start;
-  gap: 18px;
-  padding: 10px 16px 10px 15px;
-  max-width: 100%;
-  box-sizing: border-box;
+  align-self: stretch;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px 10px 16px;
   border: 1px solid #e5e5ea;
   border-radius: 10px;
-  background: transparent;
+  background: #fff;
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 400;
+  text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s ease,
-              border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .rename-toggle:hover:not(:disabled) {
@@ -398,7 +400,23 @@ select:focus-visible,
 .rename-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
-  border-radius: 3px;
+  border-radius: 10px;
+}
+
+.rename-label {
+  margin-right: auto;
+  white-space: nowrap;
+}
+
+.rename-value {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: value-in 0.25s ease;
 }
 
 .rename-chevron {
@@ -407,6 +425,15 @@ select:focus-visible,
   line-height: 1;
   transform: rotate(0deg);
   transition: transform 0.2s ease;
+}
+
+@keyframes value-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .rename-chevron.open {
@@ -701,6 +728,22 @@ select:focus-visible,
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.toast-success-circle,
+.toast-success-check {
+  fill: none;
+  stroke: #248a3d;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toast-title {
+  margin: 0;
+  color: #1d1d1f;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .toast-error-circle,
